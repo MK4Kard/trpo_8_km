@@ -143,3 +143,4 @@ C:\Users\DNS\OneDrive\Рабочий стол\trpo\trpo_8\obj\Debug\net8.0\refin
 C:\Users\DNS\OneDrive\Рабочий стол\trpo\trpo_8\obj\Debug\net8.0\trpo_8.pdb
 C:\Users\DNS\OneDrive\Рабочий стол\trpo\trpo_8\obj\Debug\net8.0\trpo_8.genruntimeconfig.cache
 C:\Users\DNS\OneDrive\Рабочий стол\trpo\trpo_8\obj\Debug\net8.0\ref\trpo_8.dll
+C:\Users\DNS\OneDrive\Рабочий стол\trpo\trpo_8\obj\Debug\net8.0\trpo_8.sourcelink.json

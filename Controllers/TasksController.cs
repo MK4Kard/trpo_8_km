@@ -37,7 +37,7 @@ namespace trpo_8.Controllers
 
         [HttpPost]
         [Authorize]
-        public IActionResult CreateTask(string title, string description)
+        public IActionResult CreateTask([FromBody] string title, [FromBody] string description)
         {
             var task = new Models.Task
             {
@@ -58,7 +58,7 @@ namespace trpo_8.Controllers
 
         [HttpPut("{id:int}")]
         [Authorize]
-        public IActionResult ChangeTask([FromRoute] int id, string title, string description, bool complete)
+        public IActionResult ChangeTask([FromRoute] int id, [FromBody] string title, [FromBody] string description, [FromBody] bool complete)
         {
             var task = _context.Tasks.Find(id);
 

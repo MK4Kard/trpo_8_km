@@ -30,9 +30,9 @@
               "Title": "TasksController.cs",
               "DocumentMoniker": "C:\\Users\\DNS\\OneDrive\\\u0420\u0430\u0431\u043E\u0447\u0438\u0439 \u0441\u0442\u043E\u043B\\trpo\\trpo_8\\Controllers\\TasksController.cs",
               "RelativeDocumentMoniker": "Controllers\\TasksController.cs",
-              "ToolTip": "C:\\Users\\DNS\\OneDrive\\\u0420\u0430\u0431\u043E\u0447\u0438\u0439 \u0441\u0442\u043E\u043B\\trpo\\trpo_8\\Controllers\\TasksController.cs*",
-              "RelativeToolTip": "Controllers\\TasksController.cs*",
-              "ViewState": "AgIAAAQAAAAAAAAAAAAAwB8AAABRAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\DNS\\OneDrive\\\u0420\u0430\u0431\u043E\u0447\u0438\u0439 \u0441\u0442\u043E\u043B\\trpo\\trpo_8\\Controllers\\TasksController.cs",
+              "RelativeToolTip": "Controllers\\TasksController.cs",
+              "ViewState": "AgIAAB8AAAAAAAAAAAAswFwAAAAgAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-11-05T08:42:44.978Z",
               "EditorCaption": ""
@@ -47,8 +47,7 @@
               "RelativeToolTip": "Controllers\\Auth.cs",
               "ViewState": "AgIAAEQAAAAAAAAAAAAIwEsAAAA1AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-05T08:21:41.079Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-11-05T08:21:41.079Z"
             },
             {
               "$type": "Document",
@@ -60,8 +59,7 @@
               "RelativeToolTip": "Program.cs",
               "ViewState": "AgIAADwAAAAAAAAAAAAAAAUAAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-05T08:20:33.132Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-11-05T08:20:33.132Z"
             }
           ]
         }
