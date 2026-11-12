@@ -3,12 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\DNS\\OneDrive\\\u0420\u0430\u0431\u043E\u0447\u0438\u0439 \u0441\u0442\u043E\u043B\\trpo\\trpo_8\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{88E0ED44-2A18-4860-958D-463ED081089E}|trpo_8.csproj|c:\\users\\dns\\onedrive\\\u0440\u0430\u0431\u043E\u0447\u0438\u0439 \u0441\u0442\u043E\u043B\\trpo\\trpo_8\\controllers\\auth.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{88E0ED44-2A18-4860-958D-463ED081089E}|trpo_8.csproj|solutionrelative:controllers\\auth.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{88E0ED44-2A18-4860-958D-463ED081089E}|trpo_8.csproj|c:\\users\\dns\\onedrive\\\u0440\u0430\u0431\u043E\u0447\u0438\u0439 \u0441\u0442\u043E\u043B\\trpo\\trpo_8\\controllers\\taskscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{88E0ED44-2A18-4860-958D-463ED081089E}|trpo_8.csproj|solutionrelative:controllers\\taskscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{88E0ED44-2A18-4860-958D-463ED081089E}|trpo_8.csproj|c:\\users\\dns\\onedrive\\\u0440\u0430\u0431\u043E\u0447\u0438\u0439 \u0441\u0442\u043E\u043B\\trpo\\trpo_8\\controllers\\auth.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{88E0ED44-2A18-4860-958D-463ED081089E}|trpo_8.csproj|solutionrelative:controllers\\auth.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{88E0ED44-2A18-4860-958D-463ED081089E}|trpo_8.csproj|c:\\users\\dns\\onedrive\\\u0440\u0430\u0431\u043E\u0447\u0438\u0439 \u0441\u0442\u043E\u043B\\trpo\\trpo_8\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -22,30 +22,30 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "TasksController.cs",
               "DocumentMoniker": "C:\\Users\\DNS\\OneDrive\\\u0420\u0430\u0431\u043E\u0447\u0438\u0439 \u0441\u0442\u043E\u043B\\trpo\\trpo_8\\Controllers\\TasksController.cs",
               "RelativeDocumentMoniker": "Controllers\\TasksController.cs",
               "ToolTip": "C:\\Users\\DNS\\OneDrive\\\u0420\u0430\u0431\u043E\u0447\u0438\u0439 \u0441\u0442\u043E\u043B\\trpo\\trpo_8\\Controllers\\TasksController.cs",
               "RelativeToolTip": "Controllers\\TasksController.cs",
-              "ViewState": "AgIAAAcAAAAAAAAAAAAAwCsAAAAeAAAAAAAAAA==",
+              "ViewState": "AgIAAFUAAAAAAAAAAAAqwEcAAAAzAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-11-05T08:42:44.978Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "Auth.cs",
               "DocumentMoniker": "C:\\Users\\DNS\\OneDrive\\\u0420\u0430\u0431\u043E\u0447\u0438\u0439 \u0441\u0442\u043E\u043B\\trpo\\trpo_8\\Controllers\\Auth.cs",
               "RelativeDocumentMoniker": "Controllers\\Auth.cs",
               "ToolTip": "C:\\Users\\DNS\\OneDrive\\\u0420\u0430\u0431\u043E\u0447\u0438\u0439 \u0441\u0442\u043E\u043B\\trpo\\trpo_8\\Controllers\\Auth.cs",
               "RelativeToolTip": "Controllers\\Auth.cs",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAowEsAAAA1AAAAAAAAAA==",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAwwBgAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-11-05T08:21:41.079Z",
               "EditorCaption": ""

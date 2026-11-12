@@ -35,14 +35,16 @@ namespace trpo_8.Controllers
             return Ok(task);
         }
 
+        public record TaskData(string Title, string Description, bool IsCompleted);
+
         [HttpPost]
         [Authorize]
-        public IActionResult CreateTask([FromBody] string title, [FromBody] string description)
+        public IActionResult CreateTask([FromBody] TaskData taskData)
         {
             var task = new Models.Task
             {
-                Title = title,
-                Description = description,
+                Title = taskData.Title,
+                Description = taskData.Description,
                 OwnerLogin = User.Identity?.Name,
                 IsCompleted = false
             };
@@ -50,15 +52,12 @@ namespace trpo_8.Controllers
             _context.Tasks.Add(task);
             _context.SaveChanges();
 
-            return Created($"api/tasks/{task.Id}", new
-            {
-                created_task = task
-            });
+            return Created($"api/tasks/{task.Id}", task);
         }
 
         [HttpPut("{id:int}")]
         [Authorize]
-        public IActionResult ChangeTask([FromRoute] int id, [FromBody] string title, [FromBody] string description, [FromBody] bool complete)
+        public IActionResult ChangeTask([FromRoute] int id, [FromBody] TaskData taskData)
         {
             var task = _context.Tasks.Find(id);
 
@@ -68,16 +67,13 @@ namespace trpo_8.Controllers
             if (task.OwnerLogin != User.Identity?.Name && !User.IsInRole("Admin"))
                 return Forbid();
 
-            task.Title = title;
-            task.Description = description;
-            task.IsCompleted = complete;
+            task.Title = taskData.Title;
+            task.Description = taskData.Description;
+            task.IsCompleted = taskData.IsCompleted;
 
             _context.SaveChanges();
 
-            return Ok(new
-            {
-                changed_task = task
-            });
+            return Ok(task);
         }
 
         [HttpDelete("{id:int}")]
