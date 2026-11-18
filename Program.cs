@@ -2,7 +2,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Collections.Concurrent;
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using trpo_8.DI_interfaces;
 using trpo_8.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -41,7 +44,10 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
+builder.Services.AddSingleton<IUser, User>(); // что нужно регистрировать, список или один экземпляр?
 builder.Services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
+builder.Services.AddScoped<IRefreshToken, RefreshToken>();
+//builder.Services.AddScoped<ConcurrentDictionary<string, DateTime>>(); // Отозванные JWT
 
 var key = builder.Configuration["Jwt:Key"] ?? throw new Exception("Не задан секретный ключ JWT");
 
@@ -64,6 +70,27 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
             ClockSkew = TimeSpan.Zero
+        };
+
+        options.Events = new JwtBearerEvents
+        {
+            OnTokenValidated = context =>
+            {
+                var jti = context.Principal?.FindFirst(JwtRegisteredClaimNames.Jti)?.Value;
+
+                if (string.IsNullOrEmpty(jti))
+                {
+                    context.Fail("В JWT отсутствует jti");
+                    return System.Threading.Tasks.Task.CompletedTask;
+                }
+
+                var revokedTokens = context.HttpContext.RequestServices.GetRequiredService<ConcurrentDictionary<string, DateTime>>();
+
+                if (revokedTokens.ContainsKey(jti))
+                    context.Fail("JWT отозван");
+
+                return System.Threading.Tasks.Task.CompletedTask;
+            }
         };
     });
 

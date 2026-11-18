@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using trpo_8.DI_interfaces;
 
 namespace trpo_8.Models;
 
-public partial class RefreshToken
+public class RefreshToken : IRefreshToken
 {
     public int Id { get; set; }
 
