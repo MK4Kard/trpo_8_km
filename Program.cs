@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Collections.Concurrent;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
-using trpo_8.DI_interfaces;
 using trpo_8.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -44,10 +44,8 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
-builder.Services.AddSingleton<IUser, User>(); // что нужно регистрировать, список или один экземпляр?
+builder.Services.AddDbContext<KardashinDbContext>();
 builder.Services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
-builder.Services.AddScoped<IRefreshToken, RefreshToken>();
-//builder.Services.AddScoped<ConcurrentDictionary<string, DateTime>>(); // Отозванные JWT
 
 var key = builder.Configuration["Jwt:Key"] ?? throw new Exception("Не задан секретный ключ JWT");
 

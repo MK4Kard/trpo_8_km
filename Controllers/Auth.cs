@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using trpo_8.DI_interfaces;
 using trpo_8.Models;
 
 namespace trpo_8.Controllers
@@ -14,26 +14,31 @@ namespace trpo_8.Controllers
     [Route("api/v1/auth")]
     public class Auth : ControllerBase
     {
-        private readonly IUser _user;
+        private readonly KardashinDbContext _context = new();
+
+        private readonly List<User> _users;
         private readonly IPasswordHasher<User> _hasher;
         private readonly IConfiguration _configuration;
-        private readonly IRefreshToken _refreshToken;
+        private readonly List<RefreshToken> _refreshTokens;
+        private readonly List<RevokedToken> _revokedTokens;
 
-        public Auth(IUser user, IPasswordHasher<User> hasher, IConfiguration configuration, IRefreshToken refreshToken)
+        public Auth(IPasswordHasher<User> hasher, IConfiguration configuration)
         {
-            _user = user;
+            _users = _context.Users.ToList();
             _hasher = hasher;
             _configuration = configuration;
-            _refreshToken = refreshToken;
+            _refreshTokens = _context.RefreshTokens.ToList();
+            _revokedTokens = _context.RevokedTokens.ToList();
         }
 
         public record AuthRequest(string Login, string Password);
+        public record RefreshRequest(string refresh_token);
 
         [HttpPost("register")]
         public IActionResult Register(AuthRequest request)
         {
-            //if (_user.Any(u => u.Login == request.Login))
-            //    return Conflict("Логин уже существует");
+            if (_users.Any(u => u.Login == request.Login))
+                return Conflict("Логин уже существует");
 
             var user = new User { Login = request.Login };
 
@@ -41,12 +46,13 @@ namespace trpo_8.Controllers
 
             user.Role = "User";
 
-            //_users.Add(user);
+            _users.Add(user);
+            _context.SaveChanges();
 
             return Ok("Пользователь создан");
         }
 
-        /*[HttpPost("login")]
+        [HttpPost("login")]
         public IActionResult Login(AuthRequest request)
         {
             var user = _users.Find(u => u.Login == request.Login);
@@ -66,12 +72,19 @@ namespace trpo_8.Controllers
             var token = GenerateJwtToken(user);
             var ref_token = GenerateRefreshToken(user);
 
+            var result_ref_token = _refreshTokens.Find(r => r.TokenHash == ref_token);
+
+            if (result_ref_token.User == null)
+            {
+                return Unauthorized();
+            }
+
             return Ok(new
             {
                 access_token = token,
                 refresh_token = ref_token
             });
-        }*/
+        }
 
         private string GenerateJwtToken(User user)
         {
@@ -110,7 +123,8 @@ namespace trpo_8.Controllers
                 ExpiresAt = DateTime.UtcNow.AddDays(7)
             };
 
-            //_refreshTokens.Add(ref_token);
+            _refreshTokens.Add(ref_token);
+            _context.SaveChanges();
 
             return Convert.ToBase64String(rnd_num);
         }

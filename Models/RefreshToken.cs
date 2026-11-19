@@ -1,8 +1,6 @@
-﻿using trpo_8.DI_interfaces;
+﻿namespace trpo_8.Models;
 
-namespace trpo_8.Models;
-
-public class RefreshToken : IRefreshToken
+public class RefreshToken
 {
     public int Id { get; set; }
 

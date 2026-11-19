@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using trpo_8.DI_interfaces;
 
 namespace trpo_8.Models;
 
-public class User : IUser
+public class User
 {
     public int Id { get; set; }
 
