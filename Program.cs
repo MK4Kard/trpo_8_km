@@ -82,10 +82,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     return System.Threading.Tasks.Task.CompletedTask;
                 }
 
-                var revokedTokens = context.HttpContext.RequestServices.GetRequiredService<ConcurrentDictionary<string, DateTime>>();
+                var contextDb = context.HttpContext.RequestServices.GetRequiredService<KardashinDbContext>();
 
-                if (revokedTokens.ContainsKey(jti))
+                var revokedTokens = contextDb.RevokedTokens.Where(r => r.Jti == jti).Any();
+
+                if (revokedTokens)
+                {
                     context.Fail("JWT отозван");
+                    // тут делать сохранение
+                }
 
                 return System.Threading.Tasks.Task.CompletedTask;
             }

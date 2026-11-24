@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -14,30 +15,25 @@ namespace trpo_8.Controllers
     [Route("api/v1/auth")]
     public class Auth : ControllerBase
     {
-        private readonly KardashinDbContext _context = new();
+        private readonly KardashinDbContext _context;
 
-        private readonly List<User> _users;
         private readonly IPasswordHasher<User> _hasher;
         private readonly IConfiguration _configuration;
-        private readonly List<RefreshToken> _refreshTokens;
-        private readonly List<RevokedToken> _revokedTokens;
 
-        public Auth(IPasswordHasher<User> hasher, IConfiguration configuration)
+        public Auth(KardashinDbContext context, IPasswordHasher<User> hasher, IConfiguration configuration)
         {
-            _users = _context.Users.ToList();
+            _context = context;
             _hasher = hasher;
             _configuration = configuration;
-            _refreshTokens = _context.RefreshTokens.ToList();
-            _revokedTokens = _context.RevokedTokens.ToList();
         }
 
         public record AuthRequest(string Login, string Password);
-        public record RefreshRequest(string refresh_token);
+        public record RefreshRequest(string RefreshToken);
 
         [HttpPost("register")]
-        public IActionResult Register(AuthRequest request)
+        public IActionResult Register([FromBody] AuthRequest request)
         {
-            if (_users.Any(u => u.Login == request.Login))
+            if (_context.Users.Any(u => u.Login == request.Login))
                 return Conflict("Логин уже существует");
 
             var user = new User { Login = request.Login };
@@ -46,16 +42,16 @@ namespace trpo_8.Controllers
 
             user.Role = "User";
 
-            _users.Add(user);
+            _context.Users.Add(user);
             _context.SaveChanges();
 
             return Ok("Пользователь создан");
         }
 
         [HttpPost("login")]
-        public IActionResult Login(AuthRequest request)
+        public IActionResult Login([FromBody] AuthRequest request)
         {
-            var user = _users.Find(u => u.Login == request.Login);
+            var user = _context.Users.SingleOrDefault(u => u.Login == request.Login);
 
             if (user == null)
                 return Unauthorized("Неверная пара логин/пароль");
@@ -72,18 +68,70 @@ namespace trpo_8.Controllers
             var token = GenerateJwtToken(user);
             var ref_token = GenerateRefreshToken(user);
 
-            var result_ref_token = _refreshTokens.Find(r => r.TokenHash == ref_token);
-
-            if (result_ref_token.User == null)
-            {
-                return Unauthorized();
-            }
-
             return Ok(new
             {
                 access_token = token,
                 refresh_token = ref_token
             });
+        }
+
+        [HttpPost("refresh")]
+        public IActionResult UpdateToken([FromBody] RefreshRequest refresh)
+        {
+            var ref_bytes = Convert.FromBase64String(refresh.RefreshToken);
+            var hash_bytes = SHA256.HashData(ref_bytes);
+            var tok_hash = Convert.ToHexString(hash_bytes);
+
+            var user_ref = _context.RefreshTokens.SingleOrDefault(r => r.TokenHash == tok_hash);
+
+            if (user_ref == null || user_ref.ExpiresAt <= DateTime.UtcNow)
+                return Unauthorized();
+
+            var user = user_ref.User;
+
+            _context.RefreshTokens.Remove(user_ref);
+            _context.SaveChanges();
+
+            var new_token = GenerateJwtToken(user);
+            var new_ref_token = GenerateRefreshToken(user);
+
+            return Ok(new
+            {
+                access_token = new_token,
+                refresh_token = new_ref_token
+            });
+        }
+
+        [HttpPost("logout")]
+        [Authorize]
+        public IActionResult EndSession([FromBody] RefreshRequest refresh)
+        {
+            var ref_bytes = Convert.FromBase64String(refresh.RefreshToken);
+            var hash_bytes = SHA256.HashData(ref_bytes);
+            var tok_hash = Convert.ToHexString(hash_bytes);
+
+            var login = User.Identity?.Name;
+            var jti = User.FindFirst(JwtRegisteredClaimNames.Jti)?.Value;
+
+            var user = _context.Users.SingleOrDefault(u => u.Login == login);
+
+            var user_ref = _context.RefreshTokens.SingleOrDefault(r => r.TokenHash == tok_hash);
+
+            if (user_ref == null || user_ref.ExpiresAt <= DateTime.UtcNow)
+                return Unauthorized();
+
+            if (user_ref.UserId != user?.Id)
+                return Forbid();
+
+            _context.RefreshTokens.Remove(user_ref);
+            _context.RevokedTokens.Add(new RevokedToken
+            {
+                Jti = jti,
+                ExpiresAt = DateTime.UtcNow
+            });
+            _context.SaveChanges();
+
+            return NoContent();
         }
 
         private string GenerateJwtToken(User user)
@@ -123,7 +171,7 @@ namespace trpo_8.Controllers
                 ExpiresAt = DateTime.UtcNow.AddDays(7)
             };
 
-            _refreshTokens.Add(ref_token);
+            _context.RefreshTokens.Add(ref_token);
             _context.SaveChanges();
 
             return Convert.ToBase64String(rnd_num);
