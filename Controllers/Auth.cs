@@ -28,7 +28,7 @@ namespace trpo_8.Controllers
         }
 
         public record AuthRequest(string Login, string Password);
-        public record RefreshRequest(string RefreshToken);
+        public record RefreshRequest(string refresh_token);
 
         [HttpPost("register")]
         public IActionResult Register([FromBody] AuthRequest request)
@@ -78,7 +78,7 @@ namespace trpo_8.Controllers
         [HttpPost("refresh")]
         public IActionResult UpdateToken([FromBody] RefreshRequest refresh)
         {
-            var ref_bytes = Convert.FromBase64String(refresh.RefreshToken);
+            var ref_bytes = Convert.FromBase64String(refresh.refresh_token);
             var hash_bytes = SHA256.HashData(ref_bytes);
             var tok_hash = Convert.ToHexString(hash_bytes);
 
@@ -87,7 +87,8 @@ namespace trpo_8.Controllers
             if (user_ref == null || user_ref.ExpiresAt <= DateTime.UtcNow)
                 return Unauthorized();
 
-            var user = user_ref.User;
+            var user_id = user_ref.UserId;
+            var user = _context.Users.FirstOrDefault(u => u.Id == user_id);
 
             _context.RefreshTokens.Remove(user_ref);
             _context.SaveChanges();
@@ -106,7 +107,7 @@ namespace trpo_8.Controllers
         [Authorize]
         public IActionResult EndSession([FromBody] RefreshRequest refresh)
         {
-            var ref_bytes = Convert.FromBase64String(refresh.RefreshToken);
+            var ref_bytes = Convert.FromBase64String(refresh.refresh_token);
             var hash_bytes = SHA256.HashData(ref_bytes);
             var tok_hash = Convert.ToHexString(hash_bytes);
 
@@ -127,7 +128,7 @@ namespace trpo_8.Controllers
             _context.RevokedTokens.Add(new RevokedToken
             {
                 Jti = jti,
-                ExpiresAt = DateTime.UtcNow
+                ExpiresAt = DateTime.UtcNow.AddMinutes(60)
             });
             _context.SaveChanges();
 

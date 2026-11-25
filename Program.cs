@@ -89,8 +89,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 if (revokedTokens)
                 {
                     context.Fail("JWT отозван");
-                    // тут делать сохранение
                 }
+
+                //contextDb.RevokedTokens.ExecuteDelete();
+                //contextDb.SaveChanges();
 
                 return System.Threading.Tasks.Task.CompletedTask;
             }
